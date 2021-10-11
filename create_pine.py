@@ -57,8 +57,7 @@ if os.path.isfile(target_csv):
 
             pine_code.writelines(code)
             current_ticker = ticker_root
-
-    input('Complete!\nCreated a Pine script in the same location as this executable..\n')
+    input('Complete!\nCreated a Pine script in the same location as this executable.')
 
 elif target_csv == '':
     pass
