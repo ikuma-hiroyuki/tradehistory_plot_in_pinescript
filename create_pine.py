@@ -18,6 +18,8 @@ def TickerAdjust(_ticker: str):
         _ticker = 'ZB'
     elif ('UB' in _ticker):
         _ticker = 'UB'
+    elif ('USD.JPY' == _ticker):
+        _ticker = 'USDJPY'
     else:
         _ticker
     return _ticker
