@@ -3,8 +3,10 @@ import csv
 import operator
 from datetime import datetime as dt
 
+
+target_csv = input('Input csv file path.\n')
+target_csv = target_csv.replace('"', '')
 pine_code = open('pine.txt', 'w', encoding='UTF-8')
-trade_list = []
 
 
 def TickerAdjust(_ticker: str):
@@ -20,9 +22,6 @@ def TickerAdjust(_ticker: str):
         _ticker
     return _ticker
 
-
-target_csv = input('Input csv file path.\n')
-target_csv = target_csv.replace('"', '')
 
 if os.path.isfile(target_csv):
     with open(target_csv, encoding='utf-8') as f:
