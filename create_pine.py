@@ -7,7 +7,7 @@ from datetime import datetime as dt
 
 
 def SetTickerRoot(_ticker: str, date: dt):
-    adjust = True
+    tz = 5  # CMEはのタイムゾーンは-5
     if ('NQ' in _ticker):
         _ticker = 'NQ'
     elif ('ES' in _ticker):
@@ -20,9 +20,8 @@ def SetTickerRoot(_ticker: str, date: dt):
         _ticker = 'USDJPY'
     else:
         _ticker
-        adjust = False
-    # 現物は+1日しないとTrading viewで1日ずれる
-    return _ticker, date if adjust else date + datetime.timedelta(days=1)
+        tz = 4  # NYSEは-4
+    return _ticker, (date + datetime.timedelta(hours=tz)).isoformat()
 
 
 target_csv = input('Input csv file path.\n').replace('"', '')
@@ -41,15 +40,15 @@ if os.path.isfile(target_csv):
         history = [[]]
         for row in reader:
             ticker = row[5]
-            ticker_root, d = SetTickerRoot(
+            ticker_root, iso = SetTickerRoot(
                 ticker, dt.strptime(row[6], '%Y-%m-%d, %H:%M:%S'))
-            volume = row[7]
-            price = row[8]
+            volume = row[7].replace(',', '')
+            price = row[8].replace('$', '').replace(',', '')
 
             if history[0] == []:
-                history[0] = [ticker_root, ticker, d, price, volume]
+                history[0] = [ticker_root, ticker, price, volume, iso]
             else:
-                history.append([ticker_root, ticker, d, price, volume])
+                history.append([ticker_root, ticker, price, volume, iso])
 
     history.sort(key=operator.itemgetter(0, 2))
 
@@ -63,19 +62,19 @@ if os.path.isfile(target_csv):
                 total = 0
 
             ticker = record[1]
-            year = record[2].year
-            month = record[2].month
-            day = record[2].day
-            price = record[3]
-            volume = record[4]
+            price = record[2]
+            volume = record[3]
             total += int(volume)
+            iso = record[4]
 
-            code = f'{" "*4}'  \
-                'PlotLabel(' \
-                f'{year}, {month}, {day}, {volume}, {total}, {price}, "{ticker}"' \
-                ')\n'
+            code = f'{" "*4}' \
+                'PlotLabel('f'{volume}, {total}, {price}, "{ticker}", "{iso}"'')\n'
             pine_code.writelines(code)
             current_ticker = root
+
+    print('Create text file.\n'
+          'File is located in the same location as this executable.')
+    input('')
 
 elif target_csv == '':
     pass
