@@ -50,7 +50,7 @@ if os.path.isfile(target_csv):
             else:
                 history.append([ticker_root, ticker, price, volume, iso])
 
-    history.sort(key=operator.itemgetter(0, 2))
+    history.sort(key=operator.itemgetter(0, 4))
 
     with open('pine.txt', 'w', encoding='UTF-8') as pine_code:
         current_ticker = ''
