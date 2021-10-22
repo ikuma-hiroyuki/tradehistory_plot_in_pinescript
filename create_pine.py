@@ -16,6 +16,8 @@ def SetTickerRoot(_ticker: str, date: dt):
         _ticker = 'ZB'
     elif ('UB' in _ticker):
         _ticker = 'UB'
+    elif ('ZF' in _ticker):
+        _ticker = 'ZF'
     elif ('USD.JPY' == _ticker):
         _ticker = 'USDJPY'
     else:
